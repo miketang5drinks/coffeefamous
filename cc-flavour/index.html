@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>咖啡風味評鑑表（A5 + 互動風味輪）</title>
+
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .a5-sheet {
+    width: 148mm;
+    min-height: 210mm;
+    background: white;
+    padding: 16px 20px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  }
+
+  h2 {
+    margin-top: 24px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 16px 0;
+  }
+
+  td, th {
+    border: 1px solid #ccc;
+    padding: 4px;
+    font-size: 13px;
+  }
+
+  input, textarea {
+    width: 100%;
+    border: none;
+    font-size: 13px;
+    padding: 2px;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    height: 60px;
+  }
+
+  /* 風味輪方格 */
+  .wheel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .wheel-category {
+    background: #e8f5e9;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #b2dfdb;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .wheel-subgrid {
+    display: none;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .wheel-subitem {
+    background: #fff3e0;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ffcc80;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  /* 列印成 A5 */
+  @media print {
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .a5-sheet {
+      box-shadow: none;
+      width: 148mm;
+      min-height: 210mm;
+      page-break-after: always;
+    }
+  }
+</style>
+</head>
+
+<body>
+<div class="a5-sheet">
+
+  <h2>咖啡風味評鑑表</h2>
+
+  <table>
+    <tr><td>日期</td><td colspan="3"><input id="date"></td></tr>
+    <tr><td colspan="4">杯測人：<input id="cupper"></td></tr>
+    <tr>
+      <td>烘焙度</td>
+      <td>咖啡 <input id="roast-coffee"></td>
+      <td>義式濃縮 <input id="roast-espresso"></td>
+      <td></td>
+    </tr>
+  </table>
+
+  <h2>生豆資訊</h2>
+
+  <table>
+    <tr><td>莊園</td><td><input id="farm"></td></tr>
+    <tr><td>地塊／曬台</td><td><input id="lot"></td></tr>
+    <tr><td>樹種</td><td><input id="variety"></td></tr>
+    <tr><td>處理法</td><td><input id="process"></td></tr>
+    <tr><td>海拔</td><td><input id="altitude"></td></tr>
+    <tr><td>生豆篩號</td><td><input id="screen"></td></tr>
+    <tr><td>產量</td><td><input id="yield"></td></tr>
+    <tr><td>收成</td><td><input id="harvest"></td></tr>
+  </table>
+
+  <p>瑕疵：<input id="defects"></p>
+  <p>濕度：<input id="moisture"></p>
+  <p>烘焙日期：<input id="roast-date"></p>
+  <p>生豆重量：<input id="green-weight"></p>
+  <p>熟豆重量：<input id="roasted-weight"></p>
+  <p>T1（入豆溫度）：<input id="t1"></p>
+  <p>T3（最高溫度）：<input id="t3"></p>
+
+  <h2>風味與口感</h2>
+
+  <p>酸感（0–5）：<input id="acid"></p>
+  <p>苦味（0–5）：<input id="bitter"></p>
+  <p>鹹感（0–5）：<input id="salty"></p>
+  <p>甜感（0–5）：<input id="sweet"></p>
+  <p>醇厚度（0–5）：<input id="body"></p>
+  <p>餘韻（0–5）：<input id="aftertaste"></p>
+
+  <h2>香氣（點擊風味輪可自動填入）</h2>
+  <textarea id="aroma"></textarea>
+
+  <h3>風味輪（Coffee Consulate 方格分類）</h3>
+
+  <div class="wheel-grid">
+
+    <!-- 水果 -->
+    <div class="wheel-category" data-target="fruit">水果</div>
+    <div class="wheel-subgrid" id="fruit">
+      <div class="wheel-subitem">柑橘</div>
+      <div class="wheel-subitem">漿果</div>
+      <div class="wheel-subitem">核果</div>
+      <div class="wheel-subitem">熱帶水果</div>
+      <div class="wheel-subitem">果乾</div>
+    </div>
+
+    <!-- 花香 -->
+    <div class="wheel-category" data-target="floral">花香</div>
+    <div class="wheel-subgrid" id="floral">
+      <div class="wheel-subitem">花朵</div>
+      <div class="wheel-subitem">果樹花</div>
+    </div>
+
+    <!-- 草本 -->
+    <div class="wheel-category" data-target="herbal">草本</div>
+    <div class="wheel-subgrid" id="herbal">
+      <div class="wheel-subitem">草本植物</div>
+    </div>
+
+    <!-- 植物 -->
+    <div class="wheel-category" data-target="vegetal">植物</div>
+    <div class="wheel-subgrid" id="vegetal">
+      <div class="wheel-subitem">綠色植物</div>
+      <div class="wheel-subitem">乾燥植物</div>
+      <div class="wheel-subitem">穀物</div>
+    </div>
+
+    <!-- 香料 -->
+    <div class="wheel-category" data-target="spice">香料</div>
+    <div class="wheel-subgrid" id="spice">
+      <div class="wheel-subitem">香料</div>
+    </div>
+
+    <!-- 木質 -->
+    <div class="wheel-category" data-target="woody">木質</div>
+    <div class="wheel-subgrid" id="woody">
+      <div class="wheel-subitem">針葉木</div>
+      <div class="wheel-subitem">闊葉木</div>
+    </div>
+
+    <!-- 堅果 -->
+    <div class="wheel-category" data-target="nutty">堅果</div>
+    <div class="wheel-subgrid" id="nutty">
+      <div class="wheel-subitem">堅果</div>
+    </div>
+
+    <!-- 烘焙 -->
+    <div class="wheel-category" data-target="roast">烘焙</div>
+    <div class="wheel-subgrid" id="roast">
+      <div class="wheel-subitem">淺烘</div>
+      <div class="wheel-subitem">中烘</div>
+      <div class="wheel-subitem">深烘</div>
+    </div>
+
+    <!-- 無機 -->
+    <div class="wheel-category" data-target="inorganic">無機</div>
+    <div class="wheel-subgrid" id="inorganic">
+      <div class="wheel-subitem">泥土</div>
+      <div class="wheel-subitem">發霉</div>
+      <div class="wheel-subitem">陳舊</div>
+    </div>
+
+    <!-- 化學 -->
+    <div class="wheel-category" data-target="chemical">化學</div>
+    <div class="wheel-subgrid" id="chemical">
+      <div class="wheel-subitem">酒精</div>
+      <div class="wheel-subitem">醫藥味</div>
+      <div class="wheel-subitem">硫磺味</div>
+    </div>
+
+    <!-- 微生物 -->
+    <div class="wheel-category" data-target="microbial">微生物</div>
+    <div class="wheel-subgrid" id="microbial">
+      <div class="wheel-subitem">動物性</div>
+      <div class="wheel-subitem">乳酸</div>
+      <div class="wheel-subitem">發酵</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// 自動儲存
+const fields = document.querySelectorAll("input, textarea");
+fields.forEach(f => {
+  const key = "cc-" + f.id;
+  f.value = localStorage.getItem(key) || "";
+  f.addEventListener("input", () => {
+    localStorage.setItem(key, f.value);
+  });
+});
+
+// 展開大類
+document.querySelectorAll(".wheel-category").forEach(cat => {
+  cat.addEventListener("click", () => {
+    const target = document.getElementById(cat.dataset.target);
+    target.style.display = target.style.display === "grid" ? "none" : "grid";
+  });
+});
+
+// 點擊子類別 → 填入香氣欄位
+document.querySelectorAll(".wheel-subitem").forEach(item => {
+  item.addEventListener("click", () => {
+    const aroma = document.getElementById("aroma");
+    aroma.value += (aroma.value ? "、" : "") + item.textContent;
+    localStorage.setItem("cc-aroma", aroma.value);
+  });
+});
+</script>
+
+</body>
+</html>
